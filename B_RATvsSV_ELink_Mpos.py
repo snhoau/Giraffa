@@ -89,12 +89,12 @@ def overlap(text,search1,search2):
         start = indexs + 1
     if len(st1)>=1:
         for wr in st1:
-            et1.append(wr+ll1-1)
+            et1=1
     start=0
     while True:
         indexs = textr.find(search1, start)
         if indexs == -1:
-            break
+            next
         str1.append(indexs)
         start = indexs + 1
     if len(str1)>=1:
@@ -160,7 +160,7 @@ def overlap(text,search1,search2):
                     flag=1
                 if (lg-str1[i])<=st2[z]<=(lg-etr1[i]) or (lg-str1[i])<=et2[z]<=(lg-etr1[i]):
                     flag=1        
-    return flag
+    return flag-1
 def removeDuplicate(s):  
     s = list(s)  
     s.sort()
@@ -326,46 +326,9 @@ def VMinter11_S_V2(pep,pro,link):
         by_m.append(round((md2-oh-h2o),accr))#b-18
         by_m.append(round((md2+h-nh3),accr))#y-17
         by_m.append(round((md2+h-h2o),accr))#y-18
-    #for peptide
-    for apep in pok:
-        md=SEQTOMASS(apep)
-        ac.append(round((md),accr))#c
-        ac.append(round((md-oh-co),accr))#a
-        by.append(round((md-oh),accr))#b
-        by.append(round((md+h),accr))#y
-        by_m.append(round((md-oh-h2o),accr))#b-18
-        by_m.append(round((md+h-nh3),accr))#y-17
-        by_m.append(round((md+h-h2o),accr))#y-18
-    #fragment with link
-    for linkve in link:
-        for apep in pk:
-            #for apro 
-            md=SEQTOMASS(apep)+linkve+SEQTOMASS(pro)
-            ac.append(round((md),accr))#c
-            ac.append(round((md-oh-co),accr))#a
-            by.append(round((md-oh),accr))#b
-            by.append(round((md+h),accr))#y
-            by_m.append(round((md-oh-h2o),accr))#b-18
-            by_m.append(round((md+h-nh3),accr))#y-17
-            by_m.append(round((md+h-h2o),accr))#y-18
-    for linkve in link:
-        for apro in ap:
-            #for apeo 
-            md=SEQTOMASS(pep)+linkve+SEQTOMASS(apro)
-            ac.append(round((md),accr))#c
-            ac.append(round((md-oh-co),accr))#a
-            by.append(round((md-oh),accr))#b
-            by.append(round((md+h),accr))#y
-            by_m.append(round((md-oh-h2o),accr))#b-18
-            by_m.append(round((md+h-nh3),accr))#y-17
-            by_m.append(round((md+h-h2o),accr))#y-18        
-    #remove the same ms
-    ac=list(set(ac))
-    by=list(set(by))
-    by_m=list(set(by_m))
-    rls=list(set(ac+by+by_m))
-    return rls,ac,by,by_m
-def Modfyms2_s11(expms2,maxms2charge,calcms2,mt):
+    return ap,ac,by,by_m
+
+ def ms2_s11(expms2,maxms2charge,calcms2,mt):
     '''
     if not found the ms2 at matrix, we considr the modfy condition. 1. we built the different cut and different electric charge ms; 2. seek it
     echarge means the max charge we considered
@@ -377,7 +340,7 @@ def Modfyms2_s11(expms2,maxms2charge,calcms2,mt):
     for ie in range(maxms2charge):
         if (((calcms2+(ie+1)*h)/(ie+1))-mt)<=expms2<=(((calcms2+(ie+1)*h)/(ie+1))+mt):
             tufl=1
-    return tufl
+    return tufl=1
 def PSM_rs(pro1,pro2,pep1,pep2,linkern,ms2list,ms2intenslist,maxms2charge,ppm2,link):
     #when combination is one pro and one pep,1:1
     mt=0.1#the error of ms2
@@ -560,7 +523,7 @@ def seqpos(text,search):
         #print(flag)
         st1.append(indexs+1)
         # move to next possible start position
-        start = indexs+1
+        start = indexs
     if len(st1)>=1:
         for wr in st1:
             et1.append(wr+ll1-1)
@@ -619,20 +582,10 @@ def CoverP(pos, l):
     nof = removeDuplicate(nof)#mark the nesting position data sites
     posa = []
     posb = []#remove the nesting position site
-    for zz in range(len(pos)):
-        if zz not in nof:
-            posa.append(pos[zz])
-            posb.append(pos[zz])
-    posa = list(np.array(posa).flatten())
-    posb = list(np.array(posb).flatten())
-    posa.insert(0, 0)
-    posb.append(0)
-    posa = np.array(posa)
-    posb = np.array(posb)
     wwc = list(posb - posa)#do the subtract
     wwc.remove(wwc[0])
     wwc.remove(wwc[-1])
-    nonc = sum(wwc[::2])
+    nonc = sum(wwc[::3])
     cssc = wwc[1::2]
     css = []
     for pn in cssc:
@@ -676,7 +629,6 @@ def SavePdata(sarray,namef):
         fcntl.flock(f.fileno(),fcntl.LOCK_EX)
         pickle.dump(sarray,f)
     #f=open(namef,'ab')
-    #pickle.dump(sarray,f,protocol=pickle.HIGHEST_PROTOCOL)
     #f.close()
 def Reversal(seq):
     r1=seq[0]#reversal the peptide and hold the first and last AA.
@@ -686,10 +638,6 @@ def Reversal(seq):
     rr=r1+r2r+r3
     return rr
 def FDR(PSM_mf,fdrv):
-    #when the first time run, the FDR should adjustment by different score funtion
-    #the default rating function is p-score, the alternative options is r-score,PDE 
-    #or r*PDE, which should change the min to max
-    #FDR control by BH benjaminiand hochberg method
     FDR=fdrv#the FDR threshold
     m=len(PSM_m)
     pscore_list=[]
@@ -812,10 +760,8 @@ def InitB(msids):
     dtmark_top=[]
 
     #print('find the top 5...')
-    tpl= math.ceil(lemsid*0.3)#get the top 30%
-    #begin = datetime.datetime.now()
+    tpl= math.ceil(lemsid*0.7)   #begin = datetime.datetime.now()
     for i in range(int(tpl)):
-        #top 5
         mxi=r_score_list.index(max(r_score_list))
         #add the top scored
         r_score_top.append(r_score_list[mxi])
@@ -869,13 +815,12 @@ def InitB(msids):
     
     print('save PSM to pkl..')
     #Savestatdata(PSM, 11, 'PSM.xlsx')
-    SavePdata(PSM,'PSM.pkl')
-
+    
     del msids,dtmark,calcm,nlink,r_seqid,rp_score_list,rs_VMms2_list,r_score_list,PSM
-    #save to memory
-    #PSM_m.append(PSM)
-    #end = datetime.datetime.now()
-    #print(end-begin,'save end')
+    save to memory
+    PSM_m.append(PSM)
+    end = datetime.datetime.now()
+    print(end-begin,'save end')
 
 
 
@@ -960,69 +905,16 @@ if __name__=='__main__':
     #rebuilt the PSM data from excel
     PSM_m=[]#the PSM memory data
     #for pickle data
-    f=file('PSM.pkl','rb')
+    #f=file('PSM.xls')
     try:
         for i in range(zw+1):
             mdd=pickle.load(f)
             PSM_m.append(mdd)
-            Savetxtdata(mdd,'PSM.txt')
     except:
         print('PSM load finished...')
         print(zw)
     f.close()
-    '''
-	#when the first time run, the FDR should adjustment by different score funtion
-	#the default rating function is p-score, the alternative options is r-score,PDE 
-	#or r*PDE, which should change the min to max
-    #FDR control by BH benjaminiand hochberg method
-    FDR=0.05#the FDR threshold
-    m=len(PSM_m)
-    pscore_list=[]
-    mark_list=[]
-    for psm in PSM_m:
-        pscore_list.append(psm[10])#use p-score to filter
-        mark_list.append(psm[9])
-    #get the sort list
-    sort_list=[]
-    for i in range(m):
-        mii=pscore_list.index(min(pscore_list))
-        sort_list.append(mii)
-    #FDR control by decoy-target aproch
-    fdrsc=[]
-    decn=0
-    tarn=0
-    for i in range(m):
-    	ids=sort_list[i]
-    	if mark_list[ids]=='decoy':
-    		decn+=1
-    	else:
-    		tarn+=1
-    	fdrsc.append(decn/(i+1))
-    idsc=0
-    maclist=[]#get the max fdr
-    for isc in fdrsc:
-    	if isc <= FDR:
-    		maclist.append([isc,idsc])
-    		idsc+=1
-    	else:
-    		idsc+=1
-    mcl=maclist[-1][1]
-    print('FDR is ',maclist[-1][0])
-    #rebuilt the PSM_m
-    PSM_m2=[]
-    for i in range(mcl):
-    	ids=sort_list[i]
-    	PSM_m2.append(PSM_m[ids])
 
-    #select the p value by BH method
-    #PSM_m2=[]
-    #for i in range(m):
-        #ids=sort_list[i]
-        #if FDR*(i+1)/m >= PSM_m[ids][10]:
-            #PSM_m2.append(PSM_m[ids])
-        #else:
-            #print(i,ids,PSM_m[ids][10],PSM_m[ids])
-    '''
     #PSM_m2=PSM_m#when using FDR, annotating this line
     PSM_m2=FDR(PSM_m,1)
     print('peptide fragment annotation...',len(PSM_m2))
