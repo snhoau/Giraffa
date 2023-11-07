@@ -6,7 +6,7 @@ This script is only for ELinker
 We have developed a dual-control crosslinking agent for efficient analysis of multi-species protein interactions. The entire analysis process is based on tandem mass spectrometry, and this program is used to analyze the mass spectrometry results and extract potential protein interaction information. For specific information, including the synthesis of the crosslinking agent, please refer to our published article.
 
 Operating Environment
-We provide the environment for reference. Since the program uses process locks, it is recommended to run it on Linux. If an error occurs during execution and prompts for library installation, please use pip to install the required libraries. The libraries that may need to be installed are as follows:
+Giraffa dose not require installation. We provide the environment for reference. Since the program uses process locks, it is recommended to run it on Linux. If an error occurs during execution and prompts for library installation, please use pip to install the required libraries. The libraries that may need to be installed are as follows:
 
 pickle, fcntl, numpy, collections, biopython, pyteomics, multiprocessing
 
@@ -18,6 +18,7 @@ The program includes:
 
 supplymentary/shanghai_sv_mature_200_mix_fltd.fasta - Scorpion venom protein sequences (length <200)
 supplymentary/uniprot-proteome-rat-UP000002494_fltd.fasta - Rat protein sequences
+supplymentary/2-demo.mgf - Demo mgf file
 
 # Usage
 
