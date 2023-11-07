@@ -18,6 +18,7 @@ The program includes:
 
 supplymentary/shanghai_sv_mature_200_mix_fltd.fasta - Scorpion venom protein sequences (length <200)
 supplymentary/uniprot-proteome-rat-UP000002494_fltd.fasta - Rat protein sequences
+
 supplymentary/2-demo.mgf - Demo mgf file
 
 # Usage
