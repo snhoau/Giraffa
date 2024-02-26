@@ -16,8 +16,8 @@ The program includes:
 
 2. A_RATvsSV_ELink_Mpos.py - Calculation of interaction information, outputting the interaction results.
 
-supplymentary/shanghai_sv_mature_200_mix_fltd.fasta - Scorpion venom protein sequences (length <200)
-supplymentary/uniprot-proteome-rat-UP000002494_fltd.fasta - Rat protein sequences
+supplymentary/SV_mature_less200.fasta - Scorpion venom protein sequences (length <200)
+supplymentary/uniprot-proteome-rat-UP000002494.fasta - Rat protein sequences
 
 supplymentary/2-demo.mgf - Demo mgf file
 
